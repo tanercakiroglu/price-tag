@@ -1,4 +1,4 @@
-package com.pricetag.consumer.service;
+package com.pricetag.producer.service;
 
 import com.pricetag.model.InstrumentDTO;
 import lombok.RequiredArgsConstructor;

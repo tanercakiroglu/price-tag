@@ -1,4 +1,5 @@
-package com.pricetag.consumer.controller;
+package com.pricetag.producer.controller;
+
 
 import com.pricetag.model.InstrumentDTO;
 import com.pricetag.response.WrapperCollectionResponse;

@@ -1,4 +1,4 @@
-package com.pricetag.consumer.config;
+package com.pricetag;
 
 import com.pricetag.model.InstrumentDTO;
 import org.springframework.context.annotation.Bean;

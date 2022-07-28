@@ -6,17 +6,24 @@ import com.pricetag.model.InstrumentDTO;
 import com.pricetag.model.InstrumentDTOList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageHeaders;
+import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.stereotype.Service;
 
+import javax.jms.Session;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import java.io.StringReader;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Set;
 
+import static com.pricetag.constant.Parameter.INSTRUMENTS_CACHE;
 import static com.pricetag.constant.Parameter.INSTRUMENT_QUEUE;
-
-;
 
 @Service
 @RequiredArgsConstructor
@@ -25,12 +32,26 @@ import static com.pricetag.constant.Parameter.INSTRUMENT_QUEUE;
 public class JmsServiceImpl implements JmsService {
 
     private final JmsTemplate jmsTemplate;
+    private final RedisTemplate<String, InstrumentDTO> redisTemplate;
 
     @Override
     public Set<InstrumentDTO> send(String instruments) throws JAXBException {
         log.info("sending with convertAndSend() to queue <" + instruments + ">");
         jmsTemplate.convertAndSend(INSTRUMENT_QUEUE, instruments);
         return convertXmlToObject(instruments);
+    }
+
+    @JmsListener(destination = INSTRUMENT_QUEUE)
+    @Override
+    public void receiveMessage(String xml, @Headers MessageHeaders headers,
+                               Message message, Session session) throws JAXBException {
+        var instruments = convertXmlToObject(xml);
+        var now =  LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        instruments.forEach(instrumentDTO->{
+            instrumentDTO.setCreatedDate(now);
+            redisTemplate.opsForHash() .put(INSTRUMENTS_CACHE,String.format("%s-%s-%s-%s",now,
+                    instrumentDTO.getName(),instrumentDTO.getPrice(),instrumentDTO.getVendor()),instrumentDTO);
+        });
     }
 
    private Set<InstrumentDTO> convertXmlToObject(String xml) throws JAXBException {
