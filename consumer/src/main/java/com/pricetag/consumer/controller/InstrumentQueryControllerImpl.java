@@ -22,7 +22,7 @@ public class InstrumentQueryControllerImpl implements InstrumentQueryController{
     }
 
     @Override
-    public WrapperCollectionResponse<InstrumentDTO> getAllByVendorName(String vendorOrName) {
+    public WrapperCollectionResponse<InstrumentDTO> getAllByVendorOrName(String vendorOrName) {
         return WrapperCollectionResponse.of(instrumentQueryService.getAllByVendorOrName(vendorOrName));
     }
 }

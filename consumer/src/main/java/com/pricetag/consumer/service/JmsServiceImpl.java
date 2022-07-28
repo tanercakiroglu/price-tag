@@ -1,6 +1,5 @@
 package com.pricetag.consumer.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pricetag.aspect.Loggable;
 import com.pricetag.model.InstrumentDTO;
 import com.pricetag.model.InstrumentDTOList;
@@ -31,14 +30,14 @@ import static com.pricetag.constant.Parameter.INSTRUMENT_QUEUE;
 public class JmsServiceImpl implements JmsService{
 
     private final RedisTemplate<String, InstrumentDTO> redisTemplate;
-    private final ObjectMapper objectMapper;
+
 
     @JmsListener(destination = INSTRUMENT_QUEUE)
     @Override
     public void receiveMessage(String xml, @Headers MessageHeaders headers,
                                Message message, Session session) throws JAXBException {
         var instruments = convertXmlToObject(xml);
-        var now =  LocalDateTime.now().minusDays(31).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        var now =  LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         instruments.forEach(instrumentDTO->{
             instrumentDTO.setCreatedDate(now);
             redisTemplate.opsForHash() .put(INSTRUMENTS_CACHE,String.format("%s-%s-%s-%s",now,

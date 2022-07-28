@@ -27,13 +27,17 @@ public class InstrumentDeleteJob {
         var entries = hashOps.entries(INSTRUMENTS_CACHE);
         var thirtyDaysAgo = LocalDateTime.now().minusDays(30).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 
-        var deletedCount= hashOps.delete(INSTRUMENTS_CACHE, entries.entrySet()
+        var expiredInstruments = entries.entrySet()
                 .stream()
                 .filter(entrySet -> entrySet.getValue().getCreatedDate() < thirtyDaysAgo)
                 .map(Map.Entry::getKey)
                 .distinct()
-                .toArray());
-       log.info("Expired instrument count :" + deletedCount);
+                .toArray();
+        if (expiredInstruments.length > 0) {
+            var deletedCount = hashOps.delete(INSTRUMENTS_CACHE, expiredInstruments);
+            log.info("Expired instrument count :" + deletedCount);
+        }
+        log.info("Expired instrument not found");
 
     }
 }

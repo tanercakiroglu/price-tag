@@ -11,5 +11,5 @@ public interface InstrumentQueryController {
     WrapperCollectionResponse<InstrumentDTO> getAll();
 
     @GetMapping("/{searchParam}")
-    WrapperCollectionResponse<InstrumentDTO> getAllByVendorName(@PathVariable("searchParam") String vendorOrName);
+    WrapperCollectionResponse<InstrumentDTO> getAllByVendorOrName(@PathVariable("searchParam") String vendorOrName);
 }

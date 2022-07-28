@@ -10,4 +10,5 @@ public interface InstrumentCommandService {
     Set<InstrumentDTO> save(String xml) throws JAXBException;
 
 
+    InstrumentDTO saveCacheable(InstrumentDTO instrumentDTO);
 }

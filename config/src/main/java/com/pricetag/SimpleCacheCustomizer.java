@@ -1,4 +1,4 @@
-package com.pricetag.consumer.config;
+package com.pricetag;
 
 import com.pricetag.model.InstrumentDTO;
 import org.springframework.context.annotation.Bean;
@@ -10,12 +10,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 @Configuration
 public class SimpleCacheCustomizer  {
 
-
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         return new LettuceConnectionFactory();
     }
-
 
     @Bean
     public RedisTemplate<String, InstrumentDTO> redisTemplate(){
