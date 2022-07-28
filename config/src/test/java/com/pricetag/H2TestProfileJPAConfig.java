@@ -19,7 +19,7 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
-@EnableJpaRepositories(basePackages = {"com.ecabs.*"})
+@EnableJpaRepositories(basePackages = {"com.pricetag.*"})
 @EnableTransactionManagement
 @Profile("test")
 @Log4j2
