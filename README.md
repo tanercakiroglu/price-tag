@@ -8,5 +8,5 @@
 
 # Step-1:run docker run --name redis-test -p 6379:6379  -d redis
 # Step-2:run application 
-# Step-3:import Price-Tag-Embedded.postman_collection to postman  
+# Step-3:import Price-Tag.postman_collection to postman  
 
