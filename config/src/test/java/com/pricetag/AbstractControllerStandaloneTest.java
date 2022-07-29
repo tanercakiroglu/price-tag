@@ -4,7 +4,9 @@ import com.pricetag.aspect.GlobalExceptionHandler;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -17,7 +19,8 @@ public abstract class AbstractControllerStandaloneTest {
     public void setup(Object testedController) {
 
         mockMvc = MockMvcBuilders.standaloneSetup(testedController)
-                .setMessageConverters(new MappingJackson2HttpMessageConverter())
+                .setMessageConverters(new MappingJackson2HttpMessageConverter(),new Jaxb2RootElementHttpMessageConverter()
+                ,new StringHttpMessageConverter() )
                 .setControllerAdvice(new GlobalExceptionHandler(new MessageSource()))
                 .build();
     }
