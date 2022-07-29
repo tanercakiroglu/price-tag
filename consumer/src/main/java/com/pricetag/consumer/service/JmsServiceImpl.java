@@ -27,7 +27,7 @@ import static com.pricetag.constant.Parameter.INSTRUMENT_QUEUE;
 @Log4j2
 @Loggable
 @RequiredArgsConstructor
-public class JmsServiceImpl implements JmsService{
+public class JmsServiceImpl implements JmsService {
 
     private final RedisTemplate<String, InstrumentDTO> redisTemplate;
 
@@ -37,11 +37,11 @@ public class JmsServiceImpl implements JmsService{
     public void receiveMessage(String xml, @Headers MessageHeaders headers,
                                Message message, Session session) throws JAXBException {
         var instruments = convertXmlToObject(xml);
-        var now =  LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-        instruments.forEach(instrumentDTO->{
+        var now = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        instruments.forEach(instrumentDTO -> {
             instrumentDTO.setCreatedDate(now);
-            redisTemplate.opsForHash() .put(INSTRUMENTS_CACHE,String.format("%s-%s-%s-%s",now,
-                    instrumentDTO.getName(),instrumentDTO.getPrice(),instrumentDTO.getVendor()),instrumentDTO);
+            redisTemplate.opsForHash().put(INSTRUMENTS_CACHE, String.format("%s-%s-%s", now,
+                    instrumentDTO.getName(), instrumentDTO.getVendor()), instrumentDTO);
         });
     }
 
