@@ -1,5 +1,5 @@
 # price-tag
-#Consist of 3 modules 
+#Consist of 4 modules 
 #Config: It contains all aspect,cache,and spring configuration needed.
 #Model: It is not desired shared model in microservices but due to time limitation , it is seperated
 #Producer: It is designed as a producer for microservice arch.It takes xml input send activemq
